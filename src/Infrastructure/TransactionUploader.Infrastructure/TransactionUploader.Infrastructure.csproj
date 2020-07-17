@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TransactionUploader.Common\TransactionUploader.Common.csproj" />
-    <ProjectReference Include="..\TransactionUploader.Domain\TransactionUploader.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\TransactionUploader.Application\TransactionUploader.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
