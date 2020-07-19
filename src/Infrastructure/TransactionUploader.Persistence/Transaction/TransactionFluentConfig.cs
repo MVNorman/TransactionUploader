@@ -4,7 +4,7 @@ using TransactionUploader.Domain.Transaction;
 
 namespace TransactionUploader.Persistence.Transaction
 {
-    public class TransactionFluentConfiguration : IEntityTypeConfiguration<TransactionEntity>
+    public class TransactionFluentConfig : IEntityTypeConfiguration<TransactionEntity>
     {
         public void Configure(EntityTypeBuilder<TransactionEntity> builder)
         {
