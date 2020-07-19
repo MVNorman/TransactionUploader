@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TransactionUploader.Application.Xml;
+using TransactionUploader.Application.FormFile.Readers;
+using TransactionUploader.Infrastructure.Csv;
 using TransactionUploader.Infrastructure.Xml;
 
 namespace TransactionUploader.Infrastructure
@@ -8,6 +9,7 @@ namespace TransactionUploader.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services)
         {
+            services.AddTransient<ICsvFileReader, CsvFileReader>();
             services.AddTransient<IXmlFileReader, XmlFileReader>();
         }
     }
