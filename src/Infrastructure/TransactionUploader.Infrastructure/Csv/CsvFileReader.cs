@@ -14,6 +14,7 @@ namespace TransactionUploader.Infrastructure.Csv
         {
             using var reader = new StreamReader(formFile.OpenReadStream());
             using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+            csvReader.Configuration.MissingFieldFound = null;
 
             var records = csvReader.GetRecords<TModel>();
             return records.ToList();
