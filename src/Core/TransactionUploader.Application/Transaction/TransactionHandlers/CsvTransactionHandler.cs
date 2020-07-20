@@ -36,7 +36,7 @@ namespace TransactionUploader.Application.Transaction.TransactionHandlers
 
             var result = new TransactionExportReadResult();
 
-            var csvRecords = _csvFileReader.GetRecords<CsvTransaction>(formFile);
+            var csvRecords = _csvFileReader.ReadRecords<CsvTransaction>(formFile);
 
              var validationResult = _transactionValidator.Validate(csvRecords);
              if (validationResult.HasErrors)

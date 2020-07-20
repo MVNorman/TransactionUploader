@@ -11,7 +11,8 @@ namespace TransactionUploader.Application.FormFile
             new Dictionary<string, FileFormat>(StringComparer.InvariantCultureIgnoreCase)
             {
                 {"text/csv", FileFormat.Csv},
-                {"text/xml", FileFormat.Xml}
+                {"text/xml", FileFormat.Xml},
+                {"application/xml", FileFormat.Xml}
             };
 
         public static FileFormat GetFileFormat(this IFormFile formFile)

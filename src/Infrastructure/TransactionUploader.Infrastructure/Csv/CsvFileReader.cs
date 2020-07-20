@@ -10,7 +10,7 @@ namespace TransactionUploader.Infrastructure.Csv
 {
     public class CsvFileReader: ICsvFileReader
     {
-        public List<TModel> GetRecords<TModel>(IFormFile formFile)
+        public List<TModel> ReadRecords<TModel>(IFormFile formFile)
         {
             using var reader = new StreamReader(formFile.OpenReadStream());
             using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);

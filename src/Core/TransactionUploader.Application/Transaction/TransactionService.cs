@@ -93,6 +93,7 @@ namespace TransactionUploader.Application.Transaction
             return await _transactionRepository
                 .Queryable()
                 .AsNoTracking()
+                .Where(x=> x.CurrencyCode.Equals(currencyCode))
                 .ProjectTo<TransactionResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }

@@ -38,7 +38,7 @@ namespace TransactionUploader.Application.Transaction.Commands.UploadTransaction
             {
                 var readExportResult = _transactionService.GetReadExportResult(request.FormFile);
 
-                if (readExportResult.ValidationResult.HasErrors)
+                if (readExportResult.ValidationResult != null && readExportResult.ValidationResult.HasErrors)
                 {
                     await _transactionLogService.LogErrorAsync(readExportResult.InvalidTransactionsJson);
                     return readExportResult.ValidationResult;

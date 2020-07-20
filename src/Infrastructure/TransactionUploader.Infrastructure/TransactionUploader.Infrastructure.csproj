@@ -8,8 +8,4 @@
     <ProjectReference Include="..\..\Core\TransactionUploader.Application\TransactionUploader.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>
