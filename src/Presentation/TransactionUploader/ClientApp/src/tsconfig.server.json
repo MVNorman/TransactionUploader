@@ -4,6 +4,7 @@
     "module": "commonjs"
   },
   "angularCompilerOptions": {
-    "entryModule": "app/app.server.module#AppServerModule"
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   }
 }
