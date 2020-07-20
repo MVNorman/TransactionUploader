@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using TransactionUploader.Application.RepositoryRoot;
 using TransactionUploader.Domain.Transaction;
 
-namespace TransactionUploader.Application.Transaction
+namespace TransactionUploader.Application.Transaction.Contracts
 {
     public interface ITransactionRepository: IRepository<TransactionEntity>
     {

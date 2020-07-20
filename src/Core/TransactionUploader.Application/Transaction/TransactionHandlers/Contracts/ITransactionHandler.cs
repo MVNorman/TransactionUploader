@@ -7,6 +7,6 @@ namespace TransactionUploader.Application.Transaction.TransactionHandlers.Contra
     public interface ITransactionHandler
     {
         void SetSuccessor(ITransactionHandler successor);
-        TransactionExportResult HandleRequest(IFormFile formFile, FileFormat fileFormat);
+        TransactionExportReadResult GetTransactionReadResult(IFormFile formFile, FileFormat fileFormat);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TransactionUploader.Application.Transaction;
+using TransactionUploader.Application.Transaction.Contracts;
 using TransactionUploader.Domain.Transaction;
 using TransactionUploader.Persistence.RepositoryRoot;
 

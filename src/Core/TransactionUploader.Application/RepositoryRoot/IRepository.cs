@@ -10,8 +10,9 @@ namespace TransactionUploader.Application.RepositoryRoot
 {
     public interface IRepository<TEntity> where TEntity : class, IEntity
     {
+        IQueryable<TEntity> Queryable();
         void SaveChanges();
-        Task SaveChangesAsync(CancellationToken cancellationToken);
+        Task SaveChangesAsync(CancellationToken cancellationToken = default);
 
         void Delete(TEntity entity);
         void DeleteRange(IEnumerable<TEntity> entities);
@@ -24,7 +25,5 @@ namespace TransactionUploader.Application.RepositoryRoot
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
         void Insert(TEntity entity);
         Task InsertRangeAsync(List<TEntity> entities);
-
-
     }
 }

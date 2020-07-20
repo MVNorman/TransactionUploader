@@ -21,7 +21,7 @@ namespace TransactionUploader.Persistence.RepositoryRoot
             _dbSet = dbContext.Set<TEntity>();
         }
 
-        protected IQueryable<TEntity> Queryable()
+        public IQueryable<TEntity> Queryable()
         {
             return _dbContext.Set<TEntity>();
         }
@@ -73,7 +73,7 @@ namespace TransactionUploader.Persistence.RepositoryRoot
             _dbContext.SaveChanges();
         }
 
-        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

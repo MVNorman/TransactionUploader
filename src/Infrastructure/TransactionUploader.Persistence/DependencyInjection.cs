@@ -1,9 +1,8 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TransactionUploader.Application.Transaction;
-using TransactionUploader.Application.TransactionLog;
+using TransactionUploader.Application.Transaction.Contracts;
+using TransactionUploader.Application.TransactionLog.Contracts;
 using TransactionUploader.Persistence.Transaction;
 using TransactionUploader.Persistence.TransactionLog;
 

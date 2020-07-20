@@ -1,4 +1,4 @@
-﻿using TransactionUploader.Application.TransactionLog;
+﻿using TransactionUploader.Application.TransactionLog.Contracts;
 using TransactionUploader.Domain.TransactionLog;
 using TransactionUploader.Persistence.RepositoryRoot;
 

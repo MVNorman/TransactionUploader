@@ -4,15 +4,16 @@ using TransactionUploader.Domain.Transaction;
 
 namespace TransactionUploader.Application.Transaction.Models
 {
-    public class TransactionExportResult
+    public class TransactionExportReadResult
     {
-        public TransactionExportResult()
+        public TransactionExportReadResult()
         {
             ValidationResult = new ValidationResult();
-            Transactions = new List<TransactionEntity>();
+            TransactionsToExport = new List<TransactionEntity>();
         }
 
+        public string InvalidTransactionsJson { get; set; }
         public ValidationResult ValidationResult { get; set; }
-        public List<TransactionEntity> Transactions { get; }
+        public List<TransactionEntity> TransactionsToExport { get; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
+using TransactionUploader.Common;
 using TransactionUploader.Domain.Entity;
-using TransactionUploader.Domain.Transaction.Enums;
 
 namespace TransactionUploader.Domain.TransactionLog
 {
@@ -10,8 +10,7 @@ namespace TransactionUploader.Domain.TransactionLog
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
+        public LogType LogType { get; set; }
         public string InvalidTransactionsJson { get; set; }
-
-        public TransactionType TransactionType { get; set; }
     }
 }

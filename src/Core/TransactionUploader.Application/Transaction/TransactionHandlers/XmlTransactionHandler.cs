@@ -13,14 +13,14 @@ namespace TransactionUploader.Application.Transaction.TransactionHandlers
         {
         }
 
-        public TransactionExportResult HandleRequest(IFormFile formFile, FileFormat fileFormat)
+        public TransactionExportReadResult GetTransactionReadResult(IFormFile formFile, FileFormat fileFormat)
         {
             if (fileFormat == FileFormat.Xml)
             {
                 return null;
             }
 
-            return _successor?.HandleRequest(formFile, fileFormat);
+            return _successor?.GetTransactionReadResult(formFile, fileFormat);
         }
 
         public void SetSuccessor(ITransactionHandler successor)

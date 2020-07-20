@@ -1,107 +1,62 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Serilog;
-using TransactionUploader.Application.FormFile;
 using TransactionUploader.Application.FormFile.Contracts;
-using TransactionUploader.Application.Transaction.Models;
-using TransactionUploader.Application.Transaction.TransactionHandlers.Contracts;
+using TransactionUploader.Application.Transaction.Contracts;
+using TransactionUploader.Application.TransactionLog.Contracts;
 using TransactionUploader.Common;
-using TransactionUploader.Domain.Transaction;
 
 namespace TransactionUploader.Application.Transaction.Commands.UploadTransactionCommand
 {
     public class UploadTransactionHandler : IRequestHandler<UploadTransactionCommand, ValidationResult>
     {
-        private readonly IFormFileValidator _formFileValidator;
-
-        private readonly ICsvTransactionHandler _csvTransactionHandler;
-        private readonly IXmlTransactionHandler _xmlTransactionHandler;
-
-        private readonly ITransactionRepository _transactionRepository;
+        private readonly IFormFileValidator _fileValidator;
+        private readonly ITransactionService _transactionService;
+        private readonly ITransactionLogService _transactionLogService;
 
         public UploadTransactionHandler(
-            IFormFileValidator formFileValidator,
-            ICsvTransactionHandler csvTransactionHandler,
-            IXmlTransactionHandler xmlTransactionHandler,
-            ITransactionRepository transactionRepository)
+            IFormFileValidator fileValidator,
+            ITransactionService transactionService,
+            ITransactionLogService transactionLogService)
         {
-            _formFileValidator = formFileValidator;
-
-            _csvTransactionHandler = csvTransactionHandler;
-            _xmlTransactionHandler = xmlTransactionHandler;
-
-            _transactionRepository = transactionRepository;
+            _fileValidator = fileValidator;
+            _transactionService = transactionService;
+            _transactionLogService = transactionLogService;
         }
-
 
         public async Task<ValidationResult> Handle(UploadTransactionCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = _formFileValidator.Validate(request.FormFile);
+            var validationResult = _fileValidator.Validate(request.FormFile);
 
             if (validationResult.HasErrors)
                 return validationResult;
 
             try
             {
-                var exportResult = GetExportResult(request.FormFile);
+                var readExportResult = _transactionService.GetReadExportResult(request.FormFile);
 
-                if (exportResult.ValidationResult.HasErrors)
-                    return exportResult.ValidationResult;
-
-                var exportTransactionIds = exportResult.Transactions.Select(x => x.TransactionId);
-
-                var alreadyInserted = await _transactionRepository.GetByAsync(exportTransactionIds);
-                var insertedTransactionIds = alreadyInserted
-                    .Select(x => x.TransactionId)
-                    .ToList();
-
-                await HandleInsertAsync(exportResult.Transactions, insertedTransactionIds);
-
-                var exportsToUpdate = exportResult.Transactions
-                    .Where(x => insertedTransactionIds.Contains(x.TransactionId))
-                    .ToDictionary(x=> x.TransactionId);
-
-                alreadyInserted.ForEach(insertedTransaction =>
+                if (readExportResult.ValidationResult.HasErrors)
                 {
-                    insertedTransaction.Update(exportsToUpdate[insertedTransaction.TransactionId]);
-                });
+                    await _transactionLogService.LogErrorAsync(readExportResult.InvalidTransactionsJson);
+                    return readExportResult.ValidationResult;
+                }
 
-                if (alreadyInserted.Any()) 
-                    _transactionRepository.UpdateRange(alreadyInserted);
+                var transactionIds = readExportResult.TransactionsToExport.Select(x => x.TransactionId);
+                var exportedDuplicates = await _transactionService.GetByAsync(transactionIds);
 
-                await _transactionRepository.SaveChangesAsync(cancellationToken);
+                await _transactionService.InsertAsync(readExportResult.TransactionsToExport, exportedDuplicates);
+                await _transactionService.UpdateAsync(readExportResult.TransactionsToExport, exportedDuplicates);
             }
             catch (Exception exception)
             {
-                Log.Error(exception, "Some template");
+                Log.Error(exception, "template");
                 validationResult.Errors.Add("Unhandled exception has occured");
             }
 
             return validationResult;
-        }
-
-        private async Task HandleInsertAsync(List<TransactionEntity> exportTransactions, List<string> insertedTransactionIds)
-        {
-            var transactionsToInsert = exportTransactions
-                .Where(export => !insertedTransactionIds.Contains(export.TransactionId))
-                .ToList();
-
-            if (transactionsToInsert.Any())
-                await _transactionRepository.InsertRangeAsync(transactionsToInsert);
-        }
-
-        private TransactionExportResult GetExportResult(IFormFile formFile)
-        {
-            var fileFormat = formFile.GetFileFormat();
-
-            _csvTransactionHandler.SetSuccessor(_xmlTransactionHandler);
-
-            return _csvTransactionHandler.HandleRequest(formFile, fileFormat);
         }
     }
 }

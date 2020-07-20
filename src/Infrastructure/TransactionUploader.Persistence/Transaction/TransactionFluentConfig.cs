@@ -10,6 +10,10 @@ namespace TransactionUploader.Persistence.Transaction
         {
             builder.HasKey(x=> x.Id);
 
+            builder.Property(x => x.CurrencyCode)
+                .HasMaxLength(3)
+                .IsRequired();
+
             builder.Property(x => x.TransactionId)
                 .HasMaxLength(50)
                 .IsRequired();
