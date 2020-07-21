@@ -26,11 +26,6 @@ namespace TransactionUploader.Persistence.RepositoryRoot
             return _dbContext.Set<TEntity>();
         }
 
-        public void DeleteRange(IEnumerable<TEntity> entities)
-        {
-            _dbSet.RemoveRange(entities);
-        }
-
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
             _dbSet.UpdateRange(entities);
@@ -51,10 +46,8 @@ namespace TransactionUploader.Persistence.RepositoryRoot
             {
                 return orderBy(query).ToList();
             }
-            else
-            {
-                return query.ToList();
-            }
+
+            return query.ToList();
         }
 
         public virtual void Insert(TEntity entity)
@@ -67,30 +60,9 @@ namespace TransactionUploader.Persistence.RepositoryRoot
             await _dbSet.AddRangeAsync(entities);
         }
 
-
-        public void SaveChanges()
-        {
-            _dbContext.SaveChanges();
-        }
-
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-        public virtual void Delete(TEntity entity)
-        {
-            if (_dbContext.Entry(entity).State == EntityState.Detached)
-            {
-                _dbSet.Attach(entity);
-            }
-            _dbSet.Remove(entity);
-        }
-
-        public virtual void Update(TEntity entityToUpdate)
-        {
-            _dbSet.Attach(entityToUpdate);
-            _dbContext.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

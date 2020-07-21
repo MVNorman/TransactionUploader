@@ -11,13 +11,7 @@ namespace TransactionUploader.Application.RepositoryRoot
     public interface IRepository<TEntity> where TEntity : class, IEntity
     {
         IQueryable<TEntity> Queryable();
-        void SaveChanges();
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
-
-        void Delete(TEntity entity);
-        void DeleteRange(IEnumerable<TEntity> entities);
-
-        void Update(TEntity entity);
         void UpdateRange(IEnumerable<TEntity> entities);
 
         IEnumerable<TEntity> Get(

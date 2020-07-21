@@ -10,6 +10,10 @@ namespace TransactionUploader.Application.Transaction.Mappings
         public TransactionResponseMap()
         {
             CreateMap<TransactionEntity, TransactionResponse>()
+                .ForMember(x => x.Id,
+                    map =>
+                        map.MapFrom(x => x.TransactionId))
+
                 .ForMember(x => x.Payment,
                     map => 
                         map.MapFrom(x=> $"{x.Amount} {x.CurrencyCode}"))

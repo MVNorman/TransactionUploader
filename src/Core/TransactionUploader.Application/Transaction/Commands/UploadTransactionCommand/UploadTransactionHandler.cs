@@ -44,15 +44,15 @@ namespace TransactionUploader.Application.Transaction.Commands.UploadTransaction
                     return readExportResult.ValidationResult;
                 }
 
-                var transactionIds = readExportResult.TransactionsToExport.Select(x => x.TransactionId);
+                var transactionIds = readExportResult.Transactions.Select(x => x.TransactionId);
                 var exportedDuplicates = await _transactionService.GetByAsync(transactionIds);
 
-                await _transactionService.InsertAsync(readExportResult.TransactionsToExport, exportedDuplicates);
-                await _transactionService.UpdateAsync(readExportResult.TransactionsToExport, exportedDuplicates);
+                await _transactionService.InsertAsync(readExportResult.Transactions, exportedDuplicates);
+                await _transactionService.UpdateAsync(readExportResult.Transactions, exportedDuplicates);
             }
             catch (Exception exception)
             {
-                Log.Error(exception, "template");
+                Log.Error(exception, string.Empty);
                 validationResult.Errors.Add("Unhandled exception has occured");
             }
 

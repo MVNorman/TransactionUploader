@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace TransactionUploader.Application.Transaction.Models.Xml
+namespace TransactionUploader.Application.Transaction.Models.FileReadModels.Xml
 {
     [XmlRoot("Transactions")]
     public class XmlTransactionRoot

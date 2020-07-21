@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using TransactionUploader.Application.FormFile.Enums;
 using TransactionUploader.Application.FormFile.Readers;
 using TransactionUploader.Application.Transaction.Contracts;
-using TransactionUploader.Application.Transaction.Models;
-using TransactionUploader.Application.Transaction.Models.Xml;
+using TransactionUploader.Application.Transaction.Models.FileReadModels;
+using TransactionUploader.Application.Transaction.Models.FileReadModels.Xml;
 using TransactionUploader.Application.Transaction.TransactionHandlers.Contracts;
-using TransactionUploader.Domain.Transaction;
 
 namespace TransactionUploader.Application.Transaction.TransactionHandlers
 {
@@ -30,27 +28,21 @@ namespace TransactionUploader.Application.Transaction.TransactionHandlers
             _mapper = mapper;
         }
 
-        public TransactionExportReadResult GetTransactionReadResult(IFormFile formFile, FileFormat fileFormat)
+        public TransactionReadResult GetReadResult(IFormFile formFile, FileFormat fileFormat)
         {
             if (fileFormat != FileFormat.Xml) 
-                return _successor?.GetTransactionReadResult(formFile, fileFormat);
-
-            var result = new TransactionExportReadResult();
+                return _successor?.GetReadResult(formFile, fileFormat);
 
             var transactionXml = _xmlFileReader.ReadXml<XmlTransactionRoot>(formFile);
-            var validationResult = _transactionValidator.Validate(transactionXml);
 
-            if (validationResult.HasErrors)
-            {
-                result.ValidationResult = validationResult;
-                var invalidRecords = transactionXml?.Transactions.Where(x => x.InValid);
-                result.InvalidTransactionsJson = Newtonsoft.Json.JsonConvert.SerializeObject(invalidRecords);
+            var transactionModels = _mapper.Map<List<TransactionModel>>(transactionXml?.Transactions);
 
+            var result = _transactionValidator.GetValidatedReadResult(transactionModels);
+
+            if (result.ValidationResult.HasErrors)
                 return result;
-            }
 
-            var transactions = _mapper.Map<TransactionEntity[]>(transactionXml.Transactions);
-            result.TransactionsToExport.AddRange(transactions);
+            result.Transactions.AddRange(transactionModels);
 
             return result;
         }

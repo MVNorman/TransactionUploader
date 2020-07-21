@@ -1,4 +1,4 @@
-﻿namespace TransactionUploader.Application.Transaction.Models.Xml
+﻿namespace TransactionUploader.Application.Transaction.Models.FileReadModels.Xml
 {
     public class XmlPaymentDetails
     {

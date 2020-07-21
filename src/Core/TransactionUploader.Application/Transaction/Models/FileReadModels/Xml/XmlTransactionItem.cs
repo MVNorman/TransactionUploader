@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using TransactionUploader.Domain.Transaction.Enums;
 
-namespace TransactionUploader.Application.Transaction.Models.Xml
+namespace TransactionUploader.Application.Transaction.Models.FileReadModels.Xml
 {
     [Serializable]
     public class XmlTransactionItem

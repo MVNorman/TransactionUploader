@@ -18,7 +18,6 @@ namespace TransactionUploader.Persistence
 
             //TODO: Implement generic addition repositories into DI pipeline
             services.AddTransient<ITransactionLogRepository, TransactionLogRepository>();
-
             services.AddTransient<ITransactionRepository, TransactionRepository>();
         }
     }

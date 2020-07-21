@@ -1,7 +1,7 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using TransactionUploader.Domain.Transaction.Enums;
 
-namespace TransactionUploader.Application.Transaction.Models
+namespace TransactionUploader.Application.Transaction.Models.FileReadModels.Csv
 {
     public class CsvTransaction
     {

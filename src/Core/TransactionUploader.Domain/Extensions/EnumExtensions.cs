@@ -1,4 +1,5 @@
-﻿using TransactionUploader.Domain.Transaction.Enums;
+﻿using TransactionUploader.Domain.Transaction;
+using TransactionUploader.Domain.Transaction.Enums;
 using static TransactionUploader.Domain.Transaction.Enums.TransactionStatus;
 
 namespace TransactionUploader.Domain.Extensions
@@ -9,11 +10,11 @@ namespace TransactionUploader.Domain.Extensions
         {
             return status switch
             {
-                Approved => "A",
-                Failed => "R",
-                Rejected => "R",
-                Finished => "D",
-                Done => "D",
+                Approved => TransactionDefaults.TransactionStatusUnifiedFormats[Approved],
+                Failed => TransactionDefaults.TransactionStatusUnifiedFormats[Failed],
+                Rejected => TransactionDefaults.TransactionStatusUnifiedFormats[Rejected],
+                Finished => TransactionDefaults.TransactionStatusUnifiedFormats[Finished],
+                Done => TransactionDefaults.TransactionStatusUnifiedFormats[Done],
                 _ => "Unknown"
             };
         }
