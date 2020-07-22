@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Transaction\Logic\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TransactionUploader.Common\TransactionUploader.Common.csproj" />
   </ItemGroup>
 

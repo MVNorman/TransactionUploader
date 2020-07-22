@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { TransactionRootComponent } from './transaction-root/transaction-root.component';
+import { TransactionRootComponent } from './component/transaction-root/transaction-root.component';
 
 const routes: Routes = [
   {

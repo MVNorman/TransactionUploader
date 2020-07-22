@@ -36,19 +36,19 @@ namespace TransactionUploader.Application.Transaction.Commands.UploadTransaction
 
             try
             {
-                var readExportResult = _transactionService.GetReadExportResult(request.FormFile);
+                var exportReadResult = _transactionService.GetReadExportResult(request.FormFile);
 
-                if (readExportResult.ValidationResult != null && readExportResult.ValidationResult.HasErrors)
+                if (exportReadResult.ValidationResult != null && exportReadResult.ValidationResult.HasErrors)
                 {
-                    await _transactionLogService.LogErrorAsync(readExportResult.InvalidTransactionsJson);
-                    return readExportResult.ValidationResult;
+                    await _transactionLogService.LogErrorAsync(exportReadResult.InvalidTransactionsJson);
+                    return exportReadResult.ValidationResult;
                 }
 
-                var transactionIds = readExportResult.Transactions.Select(x => x.TransactionId);
+                var transactionIds = exportReadResult.Transactions.Select(x => x.TransactionId);
                 var exportedDuplicates = await _transactionService.GetByAsync(transactionIds);
 
-                await _transactionService.InsertAsync(readExportResult.Transactions, exportedDuplicates);
-                await _transactionService.UpdateAsync(readExportResult.Transactions, exportedDuplicates);
+                await _transactionService.InsertAsync(exportReadResult.Transactions, exportedDuplicates);
+                await _transactionService.UpdateAsync(exportReadResult.Transactions, exportedDuplicates);
             }
             catch (Exception exception)
             {

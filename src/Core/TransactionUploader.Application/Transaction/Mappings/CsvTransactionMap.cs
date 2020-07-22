@@ -12,7 +12,6 @@ namespace TransactionUploader.Application.Transaction.Mappings
         public CsvTransactionMap()
         {
             const string dateFormat = "dd/MM/yyyy HH:mm:ss";
-            var dateTimeProvider = CultureInfo.InvariantCulture;
 
             CreateMap<CsvTransaction, TransactionModel>()
                 .ForMember(x => x.Type,
@@ -23,10 +22,10 @@ namespace TransactionUploader.Application.Transaction.Mappings
                     opt =>
                     {
                         opt.PreCondition((transaction, entity, arg3) =>
-                            (DateTime.TryParseExact(transaction.TransactionDate, dateFormat, dateTimeProvider,
+                            (DateTime.TryParseExact(transaction.TransactionDate, dateFormat, CultureInfo.InvariantCulture,
                                 DateTimeStyles.None, out _)));
 
-                        opt.MapFrom(m => DateTime.ParseExact(m.TransactionDate, dateFormat, dateTimeProvider));
+                        opt.MapFrom(m => DateTime.ParseExact(m.TransactionDate, dateFormat, CultureInfo.InvariantCulture));
                     });
         }
     }

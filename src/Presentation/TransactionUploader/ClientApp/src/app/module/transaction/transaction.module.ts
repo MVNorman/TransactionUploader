@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { TransactionRoutingModule } from './transaction-routing.module';
 
-import { TransactionTableComponent } from './transaction-table/transaction-table.component';
-import { TransactionTableFilterComponent } from './transaction-table-filter/transaction-table-filter.component';
-import { TransactionUploadComponent } from './transaction-upload/transaction-upload.component';
-import { TransactionRootComponent } from './transaction-root/transaction-root.component';
+import { TransactionValidatorService } from './service/transaction-validator.service';
+import { TransactionService } from './service/transaction.service';
+
+import { TransactionTableComponent } from './component/transaction-table/transaction-table.component';
+import { TransactionTableFilterComponent } from './component/transaction-table-filter/transaction-table-filter.component';
+import { TransactionUploadComponent } from './component/transaction-upload/transaction-upload.component';
+import { TransactionRootComponent } from './component/transaction-root/transaction-root.component';
+import { SharedModule } from '@shared/shared.module';
+
 
 @NgModule({
   declarations: [
@@ -16,8 +20,12 @@ import { TransactionRootComponent } from './transaction-root/transaction-root.co
     TransactionUploadComponent,
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     TransactionRoutingModule
+  ],
+  providers: [
+    TransactionValidatorService,
+    TransactionService
   ]
 })
 export class TransactionModule { }

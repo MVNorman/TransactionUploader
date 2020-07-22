@@ -11,7 +11,7 @@ using TransactionUploader.Application.Transaction.Queries.GetTransactionsByStatu
 namespace TransactionUploader.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class TransactionController: ControllerBase
     {
         private readonly IMediator _mediator;
@@ -55,7 +55,7 @@ namespace TransactionUploader.Controllers
         {
             var result = await _mediator.Send(new UploadTransactionCommand(formFile));
             if (result.HasErrors)
-                return BadRequest(result.Errors);
+                return BadRequest(result.ToString());
 
             return Ok();
         }

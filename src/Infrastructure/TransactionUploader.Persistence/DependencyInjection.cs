@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TransactionUploader.Application.Transaction.Contracts;
-using TransactionUploader.Application.TransactionLog.Contracts;
-using TransactionUploader.Persistence.Transaction;
-using TransactionUploader.Persistence.TransactionLog;
+using TransactionUploader.Common.Extensions;
 
 namespace TransactionUploader.Persistence
 {
@@ -15,10 +13,19 @@ namespace TransactionUploader.Persistence
             services.AddDbContext<TransactionUploaderDbContext>(x =>
                 x.UseSqlServer(configuration.GetConnectionString("UploaderConnection")));
 
+            AddRepositories(services);
+        }
 
-            //TODO: Implement generic addition repositories into DI pipeline
-            services.AddTransient<ITransactionLogRepository, TransactionLogRepository>();
-            services.AddTransient<ITransactionRepository, TransactionRepository>();
+        private static void AddRepositories(IServiceCollection services)
+        {
+            var repositoryTypes = AppDomain.CurrentDomain
+                .GetImplementationsTypes("TransactionUploader", "Repository");
+
+            foreach (var implementationType in repositoryTypes)
+            {
+                foreach (var interfaceType in implementationType.GetInterfaces())
+                    services.AddTransient(interfaceType, implementationType);
+            }
         }
     }
 }

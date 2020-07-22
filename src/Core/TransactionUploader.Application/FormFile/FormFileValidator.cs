@@ -23,7 +23,7 @@ namespace TransactionUploader.Application.FormFile
 
             var fileFormat = file.GetFileFormat();
             if (fileFormat == FileFormat.Unknown)
-                validationResult.Errors.Add("“Unknown format");
+                validationResult.Errors.Add("Unknown format");
 
             if(file.Length > maxFileSize)
                 validationResult.Errors.Add("Max file size 1 MB");
