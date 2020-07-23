@@ -10,6 +10,6 @@ namespace TransactionUploader.Application.Transaction.Commands.UploadTransaction
         {
             FormFile = formFile;
         }
-        public IFormFile FormFile { get; set; }
+        public IFormFile FormFile { get; }
     }
 }

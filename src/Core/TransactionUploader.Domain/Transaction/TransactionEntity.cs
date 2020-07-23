@@ -1,5 +1,5 @@
 ﻿using System;
-using TransactionUploader.Domain.Entity;
+using TransactionUploader.Domain.EntityRoot;
 using TransactionUploader.Domain.Transaction.Enums;
 
 namespace TransactionUploader.Domain.Transaction

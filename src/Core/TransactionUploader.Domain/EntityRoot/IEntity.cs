@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TransactionUploader.Domain.Entity
+namespace TransactionUploader.Domain.EntityRoot
 {
     public interface IEntity
     {

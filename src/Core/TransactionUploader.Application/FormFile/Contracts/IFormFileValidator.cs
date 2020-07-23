@@ -5,6 +5,6 @@ namespace TransactionUploader.Application.FormFile.Contracts
 {
     public interface IFormFileValidator
     {
-        ValidationResult Validate(IFormFile file, int maxFileSize = 1000000);
+        ValidationResult Validate(IFormFile file, decimal maxFileSizeInBytes = 1048576);
     }
 }

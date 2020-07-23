@@ -1,6 +1,6 @@
 ﻿using System;
 using TransactionUploader.Common;
-using TransactionUploader.Domain.Entity;
+using TransactionUploader.Domain.EntityRoot;
 
 namespace TransactionUploader.Domain.TransactionLog
 {

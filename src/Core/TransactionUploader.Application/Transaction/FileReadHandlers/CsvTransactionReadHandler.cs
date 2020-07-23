@@ -4,21 +4,21 @@ using Microsoft.AspNetCore.Http;
 using TransactionUploader.Application.FormFile.Enums;
 using TransactionUploader.Application.FormFile.Readers;
 using TransactionUploader.Application.Transaction.Contracts;
+using TransactionUploader.Application.Transaction.FileReadHandlers.Contracts;
 using TransactionUploader.Application.Transaction.Models.FileReadModels;
 using TransactionUploader.Application.Transaction.Models.FileReadModels.Csv;
-using TransactionUploader.Application.Transaction.TransactionHandlers.Contracts;
 
-namespace TransactionUploader.Application.Transaction.TransactionHandlers
+namespace TransactionUploader.Application.Transaction.FileReadHandlers
 {
-    public class CsvTransactionHandler : ICsvTransactionHandler
+    public class CsvTransactionReadHandler : ICsvTransactionReadHandler
     {
-        private ITransactionHandler _successor;
+        private ITransactionReadHandler _successor;
 
         private readonly IMapper _mapper;
         private readonly ICsvFileReader _csvFileReader;
         private readonly ITransactionValidator _transactionValidator;
 
-        public CsvTransactionHandler(
+        public CsvTransactionReadHandler(
             IMapper mapper,
             ICsvFileReader csvFileReader,
             ITransactionValidator transactionValidator)
@@ -28,9 +28,9 @@ namespace TransactionUploader.Application.Transaction.TransactionHandlers
             _transactionValidator = transactionValidator;
         }
 
-        public TransactionReadResult GetReadResult(IFormFile formFile, FileFormat fileFormat)
+        public TransactionReadResult GetReadResult(IFormFile formFile, SupportedFileFormat fileFormat)
         {
-            if (fileFormat != FileFormat.Csv) 
+            if (fileFormat != SupportedFileFormat.Csv) 
                 return _successor?.GetReadResult(formFile, fileFormat);
 
             var csvRecords = _csvFileReader.ReadRecords<CsvTransaction>(formFile);
@@ -47,7 +47,7 @@ namespace TransactionUploader.Application.Transaction.TransactionHandlers
             return result;
         }
 
-        public void SetSuccessor(ITransactionHandler successor)
+        public void SetSuccessor(ITransactionReadHandler successor)
         {
             _successor = successor;
         }

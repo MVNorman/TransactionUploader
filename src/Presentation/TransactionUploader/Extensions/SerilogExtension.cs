@@ -7,7 +7,7 @@ namespace TransactionUploader.Extensions
 {
     public static class SerilogExtension
     {
-        public static IConfigurationRoot ConfigureSerilog(this IConfigurationRoot configurationRoot)
+        public static void ConfigureSerilog(this IConfigurationRoot configurationRoot)
         {
             var sinkOptions = new SinkOptions
             {
@@ -28,8 +28,6 @@ namespace TransactionUploader.Extensions
                     columnOptions: columnOpts,
                     appConfiguration: configurationRoot
                 ).CreateLogger();
-
-            return configurationRoot;
         }
     }
 }

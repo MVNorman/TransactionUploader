@@ -53,7 +53,7 @@ namespace TransactionUploader.Application.Transaction.Commands.UploadTransaction
             catch (Exception exception)
             {
                 Log.Error(exception, string.Empty);
-                validationResult.Errors.Add("Unhandled exception has occured");
+                validationResult.Errors.Add("Upload wasn't successful");
             }
 
             return validationResult;

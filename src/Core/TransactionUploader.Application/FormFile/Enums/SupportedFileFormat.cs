@@ -1,6 +1,6 @@
 ﻿namespace TransactionUploader.Application.FormFile.Enums
 {
-    public enum FileFormat
+    public enum SupportedFileFormat
     {
         Unknown = 0,
         Csv = 1,

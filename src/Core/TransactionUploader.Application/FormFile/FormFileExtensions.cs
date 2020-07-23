@@ -7,24 +7,25 @@ namespace TransactionUploader.Application.FormFile
 {
     public static class FormFileExtensions
     {
-        private static readonly IDictionary<string, FileFormat> SupportedFormats =
-            new Dictionary<string, FileFormat>(StringComparer.InvariantCultureIgnoreCase)
+        private static readonly IDictionary<string, SupportedFileFormat> SupportedFormats =
+            new Dictionary<string, SupportedFileFormat>(StringComparer.InvariantCultureIgnoreCase)
             {
-                {"text/csv", FileFormat.Csv},
-                {"text/xml", FileFormat.Xml},
-                {"application/xml", FileFormat.Xml}
+                {"text/csv", SupportedFileFormat.Csv},
+                {"application/vnd.ms-excel", SupportedFileFormat.Csv },
+                {"text/xml", SupportedFileFormat.Xml},
+                {"application/xml", SupportedFileFormat.Xml}
             };
 
-        public static FileFormat GetFileFormat(this IFormFile formFile)
+        public static SupportedFileFormat GetFileFormat(this IFormFile formFile)
         {
             var contentType = formFile.ContentType;
 
             if (contentType == null)
             {
-                return FileFormat.Unknown;
+                return SupportedFileFormat.Unknown;
             }
 
-            return SupportedFormats.TryGetValue(contentType, out var mime) ? mime : FileFormat.Unknown;
+            return SupportedFormats.TryGetValue(contentType, out var mime) ? mime : SupportedFileFormat.Unknown;
         }
     }
 }

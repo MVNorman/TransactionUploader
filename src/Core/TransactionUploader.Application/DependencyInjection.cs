@@ -7,8 +7,8 @@ using TransactionUploader.Application.FormFile.Contracts;
 using TransactionUploader.Application.MediatR;
 using TransactionUploader.Application.Transaction;
 using TransactionUploader.Application.Transaction.Contracts;
-using TransactionUploader.Application.Transaction.TransactionHandlers;
-using TransactionUploader.Application.Transaction.TransactionHandlers.Contracts;
+using TransactionUploader.Application.Transaction.FileReadHandlers;
+using TransactionUploader.Application.Transaction.FileReadHandlers.Contracts;
 using TransactionUploader.Application.TransactionLog;
 using TransactionUploader.Application.TransactionLog.Contracts;
 
@@ -24,14 +24,14 @@ namespace TransactionUploader.Application
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
 
-            services.AddTransient<IFormFileValidator, FormFileValidator>();
-            services.AddTransient<ITransactionValidator, TransactionValidator>();
+            services.AddScoped<IFormFileValidator, FormFileValidator>();
+            services.AddScoped<ITransactionValidator, TransactionValidator>();
 
-            services.AddTransient<IXmlTransactionHandler, XmlTransactionHandler>();
-            services.AddTransient<ICsvTransactionHandler, CsvTransactionHandler>();
+            services.AddScoped<IXmlTransactionReadHandler, XmlTransactionReadHandler>();
+            services.AddScoped<ICsvTransactionReadHandler, CsvTransactionReadHandler>();
 
-            services.AddTransient<ITransactionService, TransactionService>();
-            services.AddTransient<ITransactionLogService, TransactionLogService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<ITransactionLogService, TransactionLogService>();
         }
     }
 }

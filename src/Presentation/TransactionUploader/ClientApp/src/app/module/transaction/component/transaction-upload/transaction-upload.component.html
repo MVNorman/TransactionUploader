@@ -11,9 +11,6 @@
             type="file" 
             class="form-control"
             (change)="onFileChange($event)">
-        <div *ngIf="formControls.file.touched && formControls.file.invalid" class="alert alert-danger">
-            <div *ngIf="formControls.file.errors.required">File is required.</div>
-        </div>
     </div>
           
     <button class="btn btn-primary" type="submit">Submit</button>

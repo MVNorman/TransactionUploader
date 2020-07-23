@@ -9,9 +9,6 @@ namespace TransactionUploader.Application.Transaction
 {
     public class TransactionValidator : ITransactionValidator
     {
-        private const int IsoCurrencySymbolLength = 3;
-        private const int TransactionIdMaxLength = 50;
-
         public bool IsDateRangeValid(DateTime dateFrom, DateTime dateTo)
         {
             var isValid = dateTo >= dateFrom;
@@ -29,7 +26,7 @@ namespace TransactionUploader.Application.Transaction
         public bool IsCurrencyCodeValid(string currencyCode)
         {
             return !string.IsNullOrWhiteSpace(currencyCode) &&
-                   currencyCode.Length == IsoCurrencySymbolLength;
+                   currencyCode.Length == TransactionDefaults.IsoCurrencySymbolLength;
         }
 
         public TransactionReadResult GetValidatedReadResult(List<TransactionModel> transactions)
@@ -62,8 +59,8 @@ namespace TransactionUploader.Application.Transaction
         {
             var isValid = !string.IsNullOrWhiteSpace(transactionItem.CurrencyCode) &&
                           !string.IsNullOrWhiteSpace(transactionItem.TransactionId) &&
-                          transactionItem.TransactionId.Length <= TransactionIdMaxLength &&
-                          transactionItem.CurrencyCode.Length == IsoCurrencySymbolLength &&
+                          transactionItem.TransactionId.Length <= TransactionDefaults.TransactionIdMaxLength &&
+                          transactionItem.CurrencyCode.Length == TransactionDefaults.IsoCurrencySymbolLength &&
                           transactionItem.TransactionDate.HasValue &&
                           transactionItem.TransactionDate != default &&
                           transactionItem.Amount.HasValue &&

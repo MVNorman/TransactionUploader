@@ -31,11 +31,7 @@ export class TransactionUploadComponent implements OnDestroy, OnInit {
     this.transactionService.unsubscibe$.complete();
   }
 
-  get formControls(){
-    return this.uploadForm.controls;
-  }
-     
-  onFileChange(event) {
+  onFileChange(event): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       var isMimeTypeSupported = this.transactionValidator.isMimeTypeSupported(file.type);

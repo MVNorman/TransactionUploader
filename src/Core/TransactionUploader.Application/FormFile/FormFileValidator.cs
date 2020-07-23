@@ -7,8 +7,7 @@ namespace TransactionUploader.Application.FormFile
 {
     public class FormFileValidator: IFormFileValidator
     {
-        //TODO: For hardcoded strings should be appropriate language resources
-        public ValidationResult Validate(IFormFile file, int maxFileSize = 1000000)
+        public ValidationResult Validate(IFormFile file, decimal maxFileSizeInBytes = 1048576)
         {
             var validationResult = new ValidationResult();
 
@@ -22,11 +21,14 @@ namespace TransactionUploader.Application.FormFile
                 validationResult.Errors.Add("File can not be empty");
 
             var fileFormat = file.GetFileFormat();
-            if (fileFormat == FileFormat.Unknown)
+            if (fileFormat == SupportedFileFormat.Unknown)
                 validationResult.Errors.Add("Unknown format");
 
-            if(file.Length > maxFileSize)
-                validationResult.Errors.Add("Max file size 1 MB");
+            if (file.Length > maxFileSizeInBytes)
+            {
+                var megabytes = (maxFileSizeInBytes / 1024) / 1024;
+                validationResult.Errors.Add($"Max file size is {megabytes} MB");
+            }
 
             return validationResult;
         }

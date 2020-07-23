@@ -15,5 +15,8 @@ namespace TransactionUploader.Domain.Transaction
                 {TransactionStatus.Done, "D"}
             };
 
+
+        public const int IsoCurrencySymbolLength = 3;
+        public const int TransactionIdMaxLength = 50;
     }
 }
