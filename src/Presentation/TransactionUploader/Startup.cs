@@ -4,30 +4,37 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TransactionUploader.Application;
+using TransactionUploader.Infrastructure;
+using TransactionUploader.Persistence;
 
 namespace TransactionUploader
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
-        public IConfiguration Configuration { get; }
+        private IWebHostEnvironment WebHostEnvironment { get; }
+        private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-            // In production, the Angular files will be served from this directory
+            services.AddInfrastructure(WebHostEnvironment.IsDevelopment());
+            services.AddPersistence(Configuration);
+            services.AddApplication();
+
+            services.AddControllers();
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -56,9 +63,6 @@ namespace TransactionUploader
 
             app.UseSpa(spa =>
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())

@@ -1,0 +1,17 @@
+<h1>File uploader, works for following formats: xml, csv </h1>
+       
+<form [formGroup]="uploadForm" (ngSubmit)="submit()">
+  
+    <div class="form-group">
+        <label for="file">File</label>
+        <input 
+            accept=".csv, .xml"
+            formControlName="file"
+            id="file" 
+            type="file" 
+            class="form-control"
+            (change)="onFileChange($event)">
+    </div>
+          
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
