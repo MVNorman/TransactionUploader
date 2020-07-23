@@ -4,7 +4,7 @@ using TransactionUploader.Domain.EntityRoot;
 
 namespace TransactionUploader.Application.RepositoryRoot
 {
-    public interface IRepository<in TEntity> where TEntity : IEntity
+    public interface ICommandRepository<in TEntity> where TEntity : IEntity
     {
         void UpdateRange(IEnumerable<TEntity> entities);
         Task AddAsync(TEntity entity);

@@ -26,7 +26,7 @@ namespace TransactionUploader.Persistence.Transaction
 
         public async Task UpdateRangeAsync(IEnumerable<TransactionEntity> entities)
         {
-            var repository = _efUnitOfWork.Repository<TransactionEntity>();
+            var repository = _efUnitOfWork.CommandRepository<TransactionEntity>();
 
             repository.UpdateRange(entities);
             await _efUnitOfWork.SaveChangesAsync(default);
@@ -34,7 +34,7 @@ namespace TransactionUploader.Persistence.Transaction
 
         public async Task AddRangeAsync(IEnumerable<TransactionEntity> entities)
         {
-            var repository = _efUnitOfWork.Repository<TransactionEntity>();
+            var repository = _efUnitOfWork.CommandRepository<TransactionEntity>();
 
             await repository.AddRangeAsync(entities);
             await _efUnitOfWork.SaveChangesAsync(default);

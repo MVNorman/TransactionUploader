@@ -6,11 +6,11 @@ using TransactionUploader.Domain.EntityRoot;
 
 namespace TransactionUploader.Persistence.EFCore
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
+    public class CommandRepository<TEntity> : ICommandRepository<TEntity> where TEntity : class, IEntity
     {
         private readonly DbSet<TEntity> _dbSet;
 
-        public Repository(DbContext dbContext)
+        public CommandRepository(DbContext dbContext)
         {
             _dbSet = dbContext.Set<TEntity>();
         }

@@ -16,7 +16,7 @@ namespace TransactionUploader.Persistence.TransactionLog
 
         public async Task AddAsync(TransactionLogEntity entity)
         {
-            var repository = _efUnitOfWork.Repository<TransactionLogEntity>();
+            var repository = _efUnitOfWork.CommandRepository<TransactionLogEntity>();
 
             await repository.AddAsync(entity);
             await _efUnitOfWork.SaveChangesAsync(default);

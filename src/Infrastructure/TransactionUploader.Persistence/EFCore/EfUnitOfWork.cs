@@ -32,15 +32,15 @@ namespace TransactionUploader.Persistence.EFCore
             return (IQueryRepository<TEntity>)_repositories[key];
         }
 
-        public IRepository<TEntity> Repository<TEntity>() where TEntity : class, IEntity
+        public ICommandRepository<TEntity> CommandRepository<TEntity>() where TEntity : class, IEntity
         {
             if (_repositories == null) _repositories = new ConcurrentDictionary<string, object>();
 
             var key = $"{typeof(TEntity)}-COMMAND";
             if (!_repositories.ContainsKey(key))
-                _repositories[key] = new Repository<TEntity>(_context);
+                _repositories[key] = new CommandRepository<TEntity>(_context);
 
-            return (IRepository<TEntity>)_repositories[key];
+            return (ICommandRepository<TEntity>)_repositories[key];
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
