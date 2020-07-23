@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TransactionUploader.Persistence;
+using TransactionUploader.Persistence.EFCore;
 
 namespace TransactionUploader.Persistence.Migrations
 {
@@ -32,7 +32,9 @@ namespace TransactionUploader.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CurrencyCode")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(3)")
+                        .HasMaxLength(3);
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -54,6 +56,29 @@ namespace TransactionUploader.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("TransactionUploader.Domain.TransactionLog.TransactionLogEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvalidTransactionsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LogType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransactionLogs");
                 });
 #pragma warning restore 612, 618
         }
