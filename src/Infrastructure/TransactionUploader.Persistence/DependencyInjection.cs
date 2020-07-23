@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TransactionUploader.Common.Extensions;
+using TransactionUploader.Persistence.EFCore;
 
 namespace TransactionUploader.Persistence
 {
@@ -12,6 +13,8 @@ namespace TransactionUploader.Persistence
         {
             services.AddDbContext<TransactionUploaderDbContext>(x =>
                 x.UseSqlServer(configuration.GetConnectionString("UploaderConnection")));
+
+            services.AddScoped<IEfUnitOfWork<TransactionUploaderDbContext>, EfUnitOfWork<TransactionUploaderDbContext>>();
 
             AddRepositories(services);
         }
@@ -24,7 +27,7 @@ namespace TransactionUploader.Persistence
             foreach (var implementationType in repositoryTypes)
             {
                 foreach (var interfaceType in implementationType.GetInterfaces())
-                    services.AddTransient(interfaceType, implementationType);
+                    services.AddScoped(interfaceType, implementationType);
             }
         }
     }

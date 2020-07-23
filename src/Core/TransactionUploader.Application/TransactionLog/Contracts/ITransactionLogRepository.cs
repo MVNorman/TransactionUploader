@@ -1,9 +1,10 @@
-﻿using TransactionUploader.Application.RepositoryRoot;
+﻿using System.Threading.Tasks;
 using TransactionUploader.Domain.TransactionLog;
 
 namespace TransactionUploader.Application.TransactionLog.Contracts
 {
-    public interface ITransactionLogRepository: IRepository<TransactionLogEntity>
+    public interface ITransactionLogRepository
     {
+        Task AddAsync(TransactionLogEntity entity);
     }
 }

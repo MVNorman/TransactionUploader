@@ -1,13 +1,25 @@
-﻿using TransactionUploader.Application.TransactionLog.Contracts;
+﻿using System.Threading.Tasks;
+using TransactionUploader.Application.TransactionLog.Contracts;
 using TransactionUploader.Domain.TransactionLog;
-using TransactionUploader.Persistence.RepositoryRoot;
+using TransactionUploader.Persistence.EFCore;
 
 namespace TransactionUploader.Persistence.TransactionLog
 {
-    public class TransactionLogRepository: BaseRepository<TransactionLogEntity>, ITransactionLogRepository
+    public class TransactionLogRepository: ITransactionLogRepository
     {
-        public TransactionLogRepository(TransactionUploaderDbContext dbContext) : base(dbContext)
+        private readonly IEfUnitOfWork<TransactionUploaderDbContext> _efUnitOfWork;
+
+        public TransactionLogRepository(IEfUnitOfWork<TransactionUploaderDbContext> efUnitOfWork)
         {
+            _efUnitOfWork = efUnitOfWork;
+        }
+
+        public async Task AddAsync(TransactionLogEntity entity)
+        {
+            var repository = _efUnitOfWork.Repository<TransactionLogEntity>();
+
+            await repository.AddAsync(entity);
+            await _efUnitOfWork.SaveChangesAsync(default);
         }
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using TransactionUploader.Application.RepositoryRoot;
 using TransactionUploader.Domain.Transaction;
 
 namespace TransactionUploader.Application.Transaction.Contracts
 {
-    public interface ITransactionRepository: IRepository<TransactionEntity>
+    public interface ITransactionRepository
     {
-        Task<List<TransactionEntity>> GetByAsNoTrackingAsync(string currencyCode);
+        IQueryable<TransactionEntity> GetQueryable();
+        Task UpdateRangeAsync(IEnumerable<TransactionEntity> entities);
+        Task AddRangeAsync(IEnumerable<TransactionEntity> entities);
         Task<List<TransactionEntity>> GetByAsync(IEnumerable<string> transactionIds);
     }
-
 }

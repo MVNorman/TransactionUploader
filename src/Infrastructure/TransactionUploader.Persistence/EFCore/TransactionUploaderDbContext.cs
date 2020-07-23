@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TransactionUploader.Domain.Transaction;
 using TransactionUploader.Domain.TransactionLog;
 
-namespace TransactionUploader.Persistence
+namespace TransactionUploader.Persistence.EFCore
 {
     public class TransactionUploaderDbContext: DbContext
     {

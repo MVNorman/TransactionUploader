@@ -12,16 +12,18 @@ namespace TransactionUploader
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
+        private IWebHostEnvironment WebHostEnvironment { get; }
         private IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddInfrastructure();
+            services.AddInfrastructure(WebHostEnvironment.IsDevelopment());
             services.AddPersistence(Configuration);
             services.AddApplication();
 

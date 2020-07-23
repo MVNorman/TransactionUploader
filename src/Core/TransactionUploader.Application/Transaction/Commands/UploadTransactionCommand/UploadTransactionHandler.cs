@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Serilog;
+using TransactionUploader.Application.Cache;
 using TransactionUploader.Application.FormFile.Contracts;
 using TransactionUploader.Application.Transaction.Contracts;
 using TransactionUploader.Application.TransactionLog.Contracts;
@@ -16,15 +17,18 @@ namespace TransactionUploader.Application.Transaction.Commands.UploadTransaction
         private readonly IFormFileValidator _fileValidator;
         private readonly ITransactionService _transactionService;
         private readonly ITransactionLogService _transactionLogService;
+        private readonly ICacheManager _cacheManager;
 
         public UploadTransactionHandler(
             IFormFileValidator fileValidator,
             ITransactionService transactionService,
-            ITransactionLogService transactionLogService)
+            ITransactionLogService transactionLogService,
+            ICacheManager cacheManager)
         {
             _fileValidator = fileValidator;
             _transactionService = transactionService;
             _transactionLogService = transactionLogService;
+            _cacheManager = cacheManager;
         }
 
         public async Task<ValidationResult> Handle(UploadTransactionCommand request, CancellationToken cancellationToken)
@@ -49,6 +53,8 @@ namespace TransactionUploader.Application.Transaction.Commands.UploadTransaction
 
                 await _transactionService.InsertAsync(exportReadResult.Transactions, exportedDuplicates);
                 await _transactionService.UpdateAsync(exportReadResult.Transactions, exportedDuplicates);
+
+                _cacheManager.RemoveByPrefix(TransactionCacheDefaults.MainTransactionPrefix);
             }
             catch (Exception exception)
             {

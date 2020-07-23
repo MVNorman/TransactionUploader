@@ -4,28 +4,47 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TransactionUploader.Application.Transaction.Contracts;
 using TransactionUploader.Domain.Transaction;
-using TransactionUploader.Persistence.RepositoryRoot;
+using TransactionUploader.Persistence.EFCore;
 
 namespace TransactionUploader.Persistence.Transaction
 {
-    public class TransactionRepository: BaseRepository<TransactionEntity>, ITransactionRepository
+    public class TransactionRepository: ITransactionRepository
     {
-        public TransactionRepository(TransactionUploaderDbContext dbContext) : base(dbContext)
+        private readonly IEfUnitOfWork<TransactionUploaderDbContext> _efUnitOfWork;
+
+        public TransactionRepository(IEfUnitOfWork<TransactionUploaderDbContext> efUnitOfWork)
         {
+            _efUnitOfWork = efUnitOfWork;
         }
 
-        public async Task<List<TransactionEntity>> GetByAsNoTrackingAsync(string currencyCode)
+        public IQueryable<TransactionEntity> GetQueryable()
         {
-            return await Queryable()
-                .AsNoTracking()
-                .Where(x =>
-                    x.CurrencyCode.Equals(currencyCode))
-                .ToListAsync();
+            var queryRepository = _efUnitOfWork.QueryRepository<TransactionEntity>();
+
+            return queryRepository.Queryable();
+        }
+
+        public async Task UpdateRangeAsync(IEnumerable<TransactionEntity> entities)
+        {
+            var repository = _efUnitOfWork.Repository<TransactionEntity>();
+
+            repository.UpdateRange(entities);
+            await _efUnitOfWork.SaveChangesAsync(default);
+        }
+
+        public async Task AddRangeAsync(IEnumerable<TransactionEntity> entities)
+        {
+            var repository = _efUnitOfWork.Repository<TransactionEntity>();
+
+            await repository.AddRangeAsync(entities);
+            await _efUnitOfWork.SaveChangesAsync(default);
         }
 
         public async Task<List<TransactionEntity>> GetByAsync(IEnumerable<string> transactionIds)
         {
-            return await Queryable()
+            var queryRepository = _efUnitOfWork.QueryRepository<TransactionEntity>();
+
+            return await queryRepository.Queryable()
                 .Where(x => transactionIds.Contains(x.TransactionId))
                 .ToListAsync();
         }

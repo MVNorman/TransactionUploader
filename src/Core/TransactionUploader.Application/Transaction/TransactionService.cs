@@ -8,29 +8,29 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TransactionUploader.Application.FormFile;
 using TransactionUploader.Application.Transaction.Contracts;
+using TransactionUploader.Application.Transaction.FileReadHandlers.Contracts;
 using TransactionUploader.Application.Transaction.Models;
 using TransactionUploader.Application.Transaction.Models.FileReadModels;
-using TransactionUploader.Application.Transaction.TransactionHandlers.Contracts;
 using TransactionUploader.Domain.Transaction;
 
 namespace TransactionUploader.Application.Transaction
 {
     public class TransactionService : ITransactionService
     {
-        private readonly ICsvTransactionHandler _csvTransactionHandler;
-        private readonly IXmlTransactionHandler _xmlTransactionHandler;
+        private readonly ICsvTransactionReadHandler _csvTransactionReadHandler;
+        private readonly IXmlTransactionReadHandler _xmlTransactionReadHandler;
 
         private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
         public TransactionService(
-            ICsvTransactionHandler csvTransactionHandler,
-            IXmlTransactionHandler xmlTransactionHandler,
+            ICsvTransactionReadHandler csvTransactionReadHandler,
+            IXmlTransactionReadHandler xmlTransactionReadHandler,
             ITransactionRepository transactionRepository,
             IMapper mapper)
         {
-            _csvTransactionHandler = csvTransactionHandler;
-            _xmlTransactionHandler = xmlTransactionHandler;
+            _csvTransactionReadHandler = csvTransactionReadHandler;
+            _xmlTransactionReadHandler = xmlTransactionReadHandler;
 
             _transactionRepository = transactionRepository;
             _mapper = mapper;
@@ -40,9 +40,9 @@ namespace TransactionUploader.Application.Transaction
         {
             var fileFormat = formFile.GetFileFormat();
 
-            _csvTransactionHandler.SetSuccessor(_xmlTransactionHandler);
+            _csvTransactionReadHandler.SetSuccessor(_xmlTransactionReadHandler);
 
-            return _csvTransactionHandler.GetReadResult(formFile, fileFormat);
+            return _csvTransactionReadHandler.GetReadResult(formFile, fileFormat);
         }
 
         public async Task InsertAsync(List<TransactionModel> transactionsToExport, List<TransactionEntity> exportedDuplicates)
@@ -58,9 +58,8 @@ namespace TransactionUploader.Application.Transaction
             if (!transactionsToInsert.Any())
                 return;
 
-            var mappedExports = _mapper.Map<List<TransactionEntity>>(transactionsToExport);
-            await _transactionRepository.InsertRangeAsync(mappedExports);
-            await _transactionRepository.SaveChangesAsync();
+            var mappedExports = _mapper.Map<IEnumerable<TransactionEntity>>(transactionsToExport);
+            await _transactionRepository.AddRangeAsync(mappedExports);
         }
 
         public async Task UpdateAsync(List<TransactionModel> transactionsToExport, List<TransactionEntity> exportedDuplicates)
@@ -83,9 +82,7 @@ namespace TransactionUploader.Application.Transaction
                 duplicate.Update(transactionsToUpdate[duplicate.TransactionId]);
             });
 
-            _transactionRepository.UpdateRange(exportedDuplicates);
-
-            await _transactionRepository.SaveChangesAsync();
+            await _transactionRepository.UpdateRangeAsync(exportedDuplicates);
         }
 
         public async Task<List<TransactionEntity>> GetByAsync(IEnumerable<string> transactionIds)
@@ -96,7 +93,7 @@ namespace TransactionUploader.Application.Transaction
         public async Task<List<TransactionResponse>> GetByCurrencyAsync(string currencyCode)
         {
             return await _transactionRepository
-                .Queryable()
+                .GetQueryable()
                 .AsNoTracking()
                 .Where(x=> x.CurrencyCode.Equals(currencyCode))
                 .ProjectTo<TransactionResponse>(_mapper.ConfigurationProvider)
@@ -105,14 +102,15 @@ namespace TransactionUploader.Application.Transaction
 
         public async Task<List<TransactionResponse>> GetByStatusAsync(string statusInUnifiedFormat)
         {
-            var transactionStatuses = TransactionDefaults.TransactionStatusUnifiedFormats
+            var transactionStatuses = 
+                TransactionDefaults.TransactionStatusUnifiedFormats
                 .Where(x =>
                     x.Value.Equals(statusInUnifiedFormat, StringComparison.OrdinalIgnoreCase))
                 .Select(x=> x.Key)
                 .ToList();
 
             var transactions = await _transactionRepository
-                .Queryable()
+                .GetQueryable()
                 .Where(x => transactionStatuses.Contains(x.Status))
                 .ProjectTo<TransactionResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync();
@@ -123,7 +121,7 @@ namespace TransactionUploader.Application.Transaction
         public async Task<List<TransactionResponse>> GetByDateRangeAsync(DateTime dateFrom, DateTime dateTo)
         {
             var transactions = await _transactionRepository
-                .Queryable()
+                .GetQueryable()
                 .Where(x => x.TransactionDate >= dateFrom && x.TransactionDate <= dateTo)
                 .ProjectTo<TransactionResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync();

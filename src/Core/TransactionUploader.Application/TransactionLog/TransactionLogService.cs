@@ -24,9 +24,7 @@ namespace TransactionUploader.Application.TransactionLog
                 InvalidTransactionsJson = invalidTransactionsJson
             };
 
-            _transactionLogRepository.Insert(logEntity);
-
-            await _transactionLogRepository.SaveChangesAsync();
+            await _transactionLogRepository.AddAsync(logEntity);
         }
     }
 }
